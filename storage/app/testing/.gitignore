@@ -1,0 +1,6 @@
+*
+!public/
+!testing/
+!excels/
+!locales.xlsx
+!.gitignore
