@@ -41,7 +41,11 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.', 'namespace' => '\App\Http\Con
         ->parameters(['rules' => 'rule_id'])
         ->names(['rules' => 'rules.'])
         ->middleware(['auth:api', 'is_admin']);
+
+    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email')->middleware(['guest']);
+    Route::put('/password/update', 'ResetPasswordController@reset')->name('password.reset')->middleware(['guest']);
 });
+
 
 Route::group(['prefix' => 'locale', 'as' => 'locale.', 'namespace' => '\App\Http\Controllers\Locale'], function () {
     Route::post('from-file', 'LocaleController@fromFile')
