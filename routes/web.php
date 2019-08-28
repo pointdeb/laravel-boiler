@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 Route::get('/auth/password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset')->middleware(['guest'])->where('token', '[\w\d]+');
+Route::get('/auth/email/confirm/{token}', 'Auth\RegisterController@confirmEmail')->name('auth.email.confirm')->middleware(['guest'])->where('token', '[\w\d]+');

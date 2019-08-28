@@ -14,7 +14,7 @@ class ResetPasswordTest extends TestCase
 {
     use RefreshDatabase, SeedDatabase, MailTracking;
 
-    public function testResetPassword()
+    public function testResetPasswordWithEmailConfirmation()
     {
         $user = factory(User::class)->create(['email' => 'john@mail.com']);
         $data = ['email' => 'john@mail.com'];
