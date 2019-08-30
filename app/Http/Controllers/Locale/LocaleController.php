@@ -21,9 +21,9 @@ class LocaleController extends Controller
         return response(null, 204);
     }
 
-    public function translate(Request $result, string $key, string $locale="en")
+    public function translate(Request $request, string $key, string $locale="en")
     {
         app()->setLocale($locale);
-        return response(__($key), 200);
+        return response(__($key, $request->input()), 200);
     }
 }

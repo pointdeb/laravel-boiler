@@ -52,6 +52,6 @@ Route::group(['prefix' => 'locale', 'as' => 'locale.', 'namespace' => '\App\Http
         ->name('from-file')
         ->middleware(['auth:api', 'is_admin']);
     Route::get('translate/{key}/{locale}', 'LocaleController@translate')
-        ->name('translate');
+        ->name('translate')->where('key', '[\w\.]+');
 });
 
