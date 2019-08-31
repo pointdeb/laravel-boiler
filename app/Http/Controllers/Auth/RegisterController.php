@@ -21,7 +21,7 @@ class RegisterController extends Controller
     {
         User::validator($request->input())->validate();
         $confirmation_token = Str::random(40);
-        $user = User::create(array_merge($request->input(), ['confirmation_token' => bcrypt($confirmation_token)]));
+        $user = User::create(array_merge($request->input(), ['confirmation_token' => Hash::make($confirmation_token), 'password' => Hash::make($request->input('password'))]));
         $rule = Rule::where('alias', 'default')->select('rule_id')->first();
         $user->rules()->sync([$rule->rule_id]);
         $user->save();

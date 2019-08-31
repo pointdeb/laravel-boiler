@@ -55,3 +55,12 @@ Route::group(['prefix' => 'locale', 'as' => 'locale.', 'namespace' => '\App\Http
         ->name('translate')->where('key', '[\w\.]+');
 });
 
+if (env('APP_ENV') == 'local') {
+    Route::group(['prefix' => 'config', 'as' => 'config.'], function () {
+        Route::get('/credentials/{id}', function (Request $request, int $id = 2) {
+        return json_encode(DB::SELECT("SELECT id as client_id, secret as client_secret FROM oauth_clients WHERE id = {$id}")[0]);
+        })->name('credentials');
+    });
+}
+
+
