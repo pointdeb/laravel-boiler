@@ -28,7 +28,7 @@ Route::group(['prefix' => 'oauth','namespace' => '\Laravel\Passport\Http\Control
         });
         abort(204);
     })->name('tokens.destroy.user');
-    Route::post('/token/refresh', 'TransientTokenController@refresh')->name('token.refresh');
+    // Route::post('/token/refresh', 'TransientTokenController@refresh')->name('token.refresh');
     Route::delete('/tokens/{token_id}', 'AuthorizedAccessTokenController@destroy')->name('tokens.destroy');
 });
 
