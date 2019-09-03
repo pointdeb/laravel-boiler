@@ -8,9 +8,9 @@ use App\Rule;
 
 class RuleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Rule::simplePaginate()->withPath('');
+        return Rule::paginate($request->input('per_page') ?? 10)->withPath('');
     }
 
     public function show(Request $request, int $rule_id)
@@ -41,7 +41,7 @@ class RuleController extends Controller
             abort(405);
         }
         $rule->delete();
-        return response($rule, 410);
+        return response($rule, 200);
     }
 
 }

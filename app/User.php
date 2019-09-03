@@ -49,7 +49,7 @@ class User extends Authenticatable
     public function scopeWithRules($query)
     {
         return $query->with(['rules' => function ($query) {
-            $query->select(['rules.rule_id', 'rules.alias','rule_users.created_at']);
+            $query->select(['rules.rule_id', 'rules.label', 'rules.alias','rule_users.created_at']);
         }]);
     }
 
