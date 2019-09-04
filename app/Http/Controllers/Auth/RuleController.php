@@ -4,13 +4,37 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
 use App\Rule;
 
 class RuleController extends Controller
 {
     public function index(Request $request)
     {
-        return Rule::paginate($request->input('per_page') ?? 10)->withPath('');
+      if (count(Input::all()) == 0) {
+          return Rule::paginate($request->input('per_page') ?? 10)->withPath('');
+      }
+
+      $query = null;
+      $this->ignoreSearchFields = array_merge($this->ignoreSearchFields, []);
+
+      foreach($request->input() as $key => $value) {
+          if (in_array($key, $this->ignoreSearchFields)) {
+            continue;
+          }
+          if (!$query) {
+              $query = Rule::where($key, 'like', '%'. $value .'%');
+              continue;
+          }
+          $query = $query->orWhere($key, 'like', '%'. $value .'%');
+      }
+
+      if ($query == null) {
+        $rules = Rule::paginate($request->input('per_page') ?? 10)->withPath('');
+      } else {
+        $rules = $query->paginate($request->input('per_page') ?? 10)->withPath('');
+      }
+      return response($rules);
     }
 
     public function show(Request $request, int $rule_id)
