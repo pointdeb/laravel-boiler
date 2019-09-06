@@ -14,7 +14,7 @@ trait ActingAs
      * @param bool $isAdmin
      * @return User|null
      */
-    public function getActingAs(bool $isAdmin = false): User
+    public function getActingAs(bool $isAdmin = false, $scopes = []): User
     {
         $this->user = $this->user ?? factory(User::class)->create();
         if ($isAdmin) {
@@ -24,7 +24,7 @@ trait ActingAs
             $this->user->rules()->sync($adminRules);
             $this->user->save();
         }
-        Passport::actingAs($this->user);
+        Passport::actingAs($this->user, $scopes);
         return $this->user;
     }
 }

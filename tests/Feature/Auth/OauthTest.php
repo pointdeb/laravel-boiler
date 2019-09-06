@@ -8,6 +8,7 @@ use Tests\ActingAs;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Client;
+use Illuminate\Support\Facades\Route;
 
 class OauthTest extends TestCase
 {
@@ -53,5 +54,37 @@ class OauthTest extends TestCase
         $this->assertEquals(200, $response->status(), $response->getContent());
         $responseContent = json_decode($response->getContent());
         $this->assertEquals(2, count($responseContent));
+    }
+
+    public function testOauthScopeRestrictionOk()
+    {
+        Route::get('/tests/app-roles', [
+            'as' => 'tests.scope.roles',
+            'uses' => function () {
+                return ['message' => 'role content'];
+            },
+            'middleware' => ['auth:api', 'scope:app-roles']
+        ]);
+
+        $user = $this->getActingAs(true, ['app-roles']);
+        $response = $this->json('GET', route('tests.scope.roles'));
+        $this->assertEquals(200, $response->status(), $response->getContent());
+
+    }
+
+    public function testOauthScopeRestrictionKo()
+    {
+        Route::get('/tests/app-roles', [
+            'as' => 'tests.scope.roles',
+            'uses' => function () {
+                return ['message' => 'role content'];
+            },
+            'middleware' => ['auth:api', 'scope:app-roles']
+        ]);
+
+        $user = $this->getActingAs(true);
+        $response = $this->json('GET', route('tests.scope.roles'));
+        $this->assertEquals(403, $response->status(), $response->getContent());
+
     }
 }

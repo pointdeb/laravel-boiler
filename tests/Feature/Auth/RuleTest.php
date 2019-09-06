@@ -106,7 +106,7 @@ class RuleTest extends TestCase
         $this->getActingAs(true);
         $rule = factory(Rule::class)->create();
         $response = $this->json('DELETE', route('auth.rules.destroy', ['rule_id' => $rule['rule_id']]));
-        $this->assertEquals(410, $response->status(), $response->getContent());
+        $this->assertEquals(200, $response->status(), $response->getContent());
         $this->assertNull(Rule::find($rule->rule_id));
     }
 
@@ -124,7 +124,7 @@ class RuleTest extends TestCase
                 $this->assertEquals(405, $response->status(), $response->getContent());
                 $this->assertNotNull(Rule::find($rule->rule_id));
             } else {
-                $this->assertEquals(410, $response->status(), $response->getContent());
+                $this->assertEquals(200, $response->status(), $response->getContent());
                 $this->assertNull(Rule::find($rule->rule_id));
             }
         }
