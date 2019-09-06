@@ -30,6 +30,10 @@ Route::group(['prefix' => 'oauth','namespace' => '\Laravel\Passport\Http\Control
     })->name('tokens.destroy.user');
     // Route::post('/token/refresh', 'TransientTokenController@refresh')->name('token.refresh');
     Route::delete('/tokens/{token_id}', 'AuthorizedAccessTokenController@destroy')->name('tokens.destroy');
+    Route::post('/clients', 'ClientController@store')->name('clients.store')->middleware('is_admin');
+    Route::put('/clients/{client_id}', 'ClientController@update')->name('clients.update')->middleware('is_admin');
+    Route::delete('/clients/{client_id}', 'ClientController@destroy')->name('clients.destroy')->middleware('is_admin');
+    Route::get('/scopes', 'ScopeController@all')->name('scopes.index');
 });
 
 Route::group(['prefix' => 'auth', 'as' => 'auth.', 'namespace' => '\App\Http\Controllers\Auth'], function () {
