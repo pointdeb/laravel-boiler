@@ -52,6 +52,25 @@ class UserTest extends TestCase
         $this->assertEquals(204, $response->status(), $response->getContent());
     }
 
+    public function testUserUpdateRulesByLeavingLastAdmin()
+    {
+        $authUser = $this->getActingAs(true);
+        $this->assertEquals($authUser->is_admin, true);
+        $user = factory(User::class)->create();
+        $adminRules = Rule::where('alias', 'like', '%admin%')->select('rule_id')->get()->map(function ($item) {
+            return $item->rule_id;
+        });
+        $user->rules()->sync($adminRules);
+        $rules = factory(Rule::class, 10)->create();
+        $rulesData = $rules->map(function ($item) {
+            return $item->rule_id;
+        })->toArray();
+        $data = ['users' => implode(',', [$user->user_id, $authUser->user_id]), 'rules' => implode(',', $rulesData)];
+        $response = $this->json('PUT', route('auth.users.rules.update'), $data);
+        $this->assertEquals(204, $response->status(), $response->getContent());
+        $this->assertEquals($authUser->is_admin, true);
+    }
+
     // public function testUserUpdateRulesNonAdmin()
     // {
     //     $authUser = $this->getActingAs();

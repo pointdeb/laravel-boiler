@@ -68,6 +68,10 @@ class UserController extends Controller
         ])->validate();
         $rules = explode(',', $request->input('rules'));
         $users = User::whereIn('user_id', explode(',', $request->input('users')))->get()->each(function ($item) use ($rules) {
+            $is_last = $item->isLastAdmin();
+            if ($is_last) {
+                return;
+            }
             $item->rules()->sync($rules);
             $item->save();
         });
