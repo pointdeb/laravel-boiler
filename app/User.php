@@ -27,13 +27,19 @@ class User extends Authenticatable
 
     public static $rules = [
         'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique_not_me:users,user_id'],
         'password' => ['required', 'string', 'min:8', 'confirmed'],
     ];
 
-    public static function validator($data)
+    public static $rulesUpdate = [
+        'name' => ['string', 'max:255'],
+        'email' => ['string', 'email', 'max:255', 'unique_not_me:users,user_id'],
+        'password' => ['string', 'min:8', 'confirmed']
+    ];
+
+    public static function validator($data, bool $update = false)
     {
-        return Validator::make($data, self::$rules);
+        return Validator::make($data, $update ? self::$rulesUpdate: self::$rules);
     }
 
     public function rules()

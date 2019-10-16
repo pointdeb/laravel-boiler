@@ -46,10 +46,15 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.', 'namespace' => '\App\Http\Con
         ->names(['rules' => 'rules.'])
         ->middleware(['auth:api', 'is_admin']);
 
+    Route::group(['prefix' => 'users', 'as' => 'users.rules.', 'middleware' => ['auth:api', 'is_admin']], function () {
+        Route::put('/rules', 'UserController@updateRules')->name('update');
+    });
+
     Route::apiResource('/users', 'UserController')
         ->parameters(['users' => 'user_id'])
         ->names(['users' => 'users.'])
         ->middleware(['auth:api', 'is_admin']);
+
 
     Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email')->middleware(['guest']);
     Route::put('/password/update', 'ResetPasswordController@reset')->name('password.reset')->middleware(['guest']);

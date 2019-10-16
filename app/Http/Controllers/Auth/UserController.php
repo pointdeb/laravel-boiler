@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use App\User;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -51,11 +52,26 @@ class UserController extends Controller
 
     public function update(Request $request, int $user_id)
     {
-        User::validator($request->input())->validate();
+        abort_if($request->user()->is_admin == false && $request->user()->user_id != $user_id, 403);
+        User::validator($request->input(), true)->validate();
         $user = User::findOrFail($user_id);
         $user->update($request->input());
         $user->save();
         return response($user, 200);
+    }
+
+    public function updateRules(Request $request)
+    {
+        Validator::make($request->input(), [
+            'users' => ['required', 'tokenfield'],
+            'rules' => ['required', 'tokenfield'],
+        ])->validate();
+        $rules = explode(',', $request->input('rules'));
+        $users = User::whereIn('user_id', explode(',', $request->input('users')))->get()->each(function ($item) use ($rules) {
+            $item->rules()->sync($rules);
+            $item->save();
+        });
+        abort(204);
     }
 
     public function destroy(Request $request, int $user_id)
