@@ -68,7 +68,7 @@ class UserTest extends TestCase
         $data = ['users' => implode(',', [$user->user_id, $authUser->user_id]), 'rules' => implode(',', $rulesData)];
         $response = $this->json('PUT', route('auth.users.rules.update'), $data);
         $this->assertEquals(204, $response->status(), $response->getContent());
-        $this->assertEquals($authUser->is_admin, true);
+        $this->assertEquals($authUser->is_admin, false);
     }
 
     // public function testUserUpdateRulesNonAdmin()

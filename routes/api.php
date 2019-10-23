@@ -67,6 +67,11 @@ Route::group(['prefix' => 'locale', 'as' => 'locale.', 'namespace' => '\App\Http
         ->middleware(['auth:api', 'is_admin']);
     Route::get('translate/{key}/{locale}', 'LocaleController@translate')
         ->name('translate')->where('key', '[\w\.]+');
+
+    Route::apiResource('/dictionaries', 'LocaleController')
+        ->parameters(['dictionaries' => 'dictionary_id'])
+        ->names(['dictionaries' => 'dictionaries.'])
+        ->middleware(['auth:api', 'is_admin']);
 });
 
 if (env('APP_ENV') == 'local') {
