@@ -21,7 +21,7 @@ class LocaleController extends Controller
             $outputPath = resource_path('lang');
         }
         // $outputPath = storage_path('app/public'); // activate on testing
-        $result = Translation::saveToFileFromExcel($excel, $outputPath);
+        // $result = Translation::saveToFileFromExcel($excel, $outputPath);
         $contents = Translation::getFromExcel($excel);
         foreach ($contents as $key => $values) {
             foreach ($values as $locale => $value) {
